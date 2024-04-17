@@ -36,6 +36,9 @@ One of the most helpful tools to an R programmer are R packages! In a nutshell, 
 ```{r}
 library()
 ```
+```{r}
+library("tidyverse)
+```
 
 A new window should have opened up with a list of packages and a short description! 
 
@@ -107,6 +110,32 @@ my_age + 5 # how old will you be in 5 years?
 
 #### <span style="color: red;">Challenge 1</span>
 Create a my_name variable with your name assigned to the variable instead of "Victoria DelaCruz". Then, create a my_age variable with your age. 
+```{r}
+my_name<-"Makalii West"
+```
+```{r}
+my_age=23
+```
+```{r}
+my_age+5
+```
+```{r}
+rm(my_name)
+```
+
+
+```{r}
+library("tidyverse")
+```
+
+```{r}
+rm(my_age)
+```
+
+
+```
+
+
 
 #### Different Types of Data
 
@@ -187,7 +216,6 @@ Let's start looking into a dataset. In data science, we perform exploratory data
 ```{r, message=FALSE}
 library(here) # allows us to cut out long file paths, ensures reproducibility
 library(janitor) # helps us clean column names
-```
 
 Note: **You will most likely get an error.** If you get an error about not having these packages installed, run the install.packages("packagename") code in the console. We went over this on line 48 under the *Installing a Package* header
 
@@ -200,15 +228,8 @@ In the code chunk below, we use the `read_csv()` function to read in the csv fil
 
   - We use the `here()` function to cut out long file paths. Instead of starting at the home directory on our computer and having to point R towards the csv file we want to read in with *"Users/Victoria/data_science/SDR-2023-Landscape/SDR-2023-Data.csv"*, we can simply tell R to start within the directory of our current R project and find the SDR-2023-Data.csv in our data folder. 
   
+  
     - This also **ensures reproducibility** because as long as we share R projects on github, our project directories will always be the same
-```{r, message=FALSE}
-sdr_data <- read_csv(here("data/SDR-2023-Data.csv")) # assigning the dataset to a variable so that we can look at/reference it
-# to view the whole dataset you can click on sdr_data in your environment pane at the top right of your screen)
-```
-Cleaning names
-```{r}
-sdr_data <- clean_names(sdr_data) # cleaning column names 
-```
 
 Note: In programming, we don't use spaces in names (usually, if you want to use a space between words, you'd use an underscore, slash, or other punctuation). That's why we used the `clean_names` function from the `janitor` package, to clean our column names and replace spaces with underscores.
 
@@ -219,8 +240,24 @@ Understanding what your data looks like is crucial to the data analysis process.
 ```{r}
 head(sdr_data) # view the first couple of rows and columns of your dataset
 ```
+```{r}
+head(sdr_data)
+```
 
 As we talked about earlier, it's always helpful to know what types of data you're handling. The code below shows us what type of data type each column holds (for ex., chr = character, num = numeric), the number of rows (you'll see that it's 206:666, meaning 206 rows and 666 columns), and some of the first few values for each column. 
+
+```{r}
+column_names<-as.list(colnames(sdr_data))
+```
+
+
+```{r}
+dim(sdr_data)
+```
+```{r}
+library("naniar")
+```
+
 
 ```{r, include = FALSE}
 data_structure <- str(sdr_data) # looking at the data structure
