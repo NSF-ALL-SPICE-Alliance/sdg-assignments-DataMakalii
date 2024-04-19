@@ -52,13 +52,13 @@ Next, let's read in our data and assign it to the variable `sdr_data`.
     - `read_csv()` and `here()`
 
 ```{r, message=FALSE}
-sdr_data <- read_csv(here("data/SDR-2023-Data.csv"))
+Dataframe <- read_csv(here("data/SDR-2023-Data.csv"))
 ```
 
 Use the `clean_names` function from the janitor package to clean up the column names of our dataframe. 
 
 ```{r}
-sdr_data <- sdr_data %>% 
+sdr_data_project <- sdr_data %>% 
   clean_names()
 ```
 
@@ -93,14 +93,14 @@ In the following code, we're:
 
 ```{r}
 ggplot(data = sdr_data, aes(x= goal_3_score, y = goal_4_score)) +
-  geom_point()
+  geom_polygon()
 ```
 
 Awesome! What if we wanted to color the points/countries based on their region? Let's use the `color` argument to add some color to do so.
 
 ```{r}
 ggplot(data = sdr_data, aes(x= goal_3_score, y = goal_4_score, color = regions_used_for_the_sdr)) +
-  geom_point()
+  geom_polygon()
 ```
 
 Interpretation:
@@ -120,11 +120,18 @@ Let's create one more scatter plot!
   - We can also color by *continuous* variables like the other SDG Scores.
     
     - Let's pass goal_5_score to the color argument to color each point/country based on their SDG 5 score.
+```{r}
+ggplot(data=sdr_data,aes(x=goal_4_score, y=goal_6_score, color = goal_2_score))+geom_point()
+```
+    COuntries with a high goal 6 score also have a high goal 4 score. Majority of the countries seem to have a high goal 2 score while a few have a low goal 2 score 
+    
     
 ```{r}
 ggplot(data = sdr_data, aes(x= goal_3_score, y = goal_4_score, color = goal_5_score)) +
   geom_point()
 ```
+Countries with A high goal 4 score also have a high goal 5 score
+
 
 Cool! It seems that the darkest blue points (countries with the lowest SDG 5 scores) tend to have mid-range or low SDG 3 / SDG 4 scores as well. The lightest blue points (countries with the highest SDG 5 scores) tend to have high SDG 3 / SDG 4 scores as well. However, there are several countries that do not follow this trend.
 
@@ -144,6 +151,11 @@ ggplot(sdr_data, aes(x= goal_3_score, y = country)) +
   geom_bar(stat = "identity")
 ```
 
+```{r}
+ggplot(sdr_data, Aes(x=goal_3_score, Y -= country))+geom_bar(stat="identify")
+
+```
+
 
 Hmm... it looks like the country names are hard to read - there are too many of them! Let's try to look at a specific region. 
 
@@ -152,16 +164,27 @@ Hmm... it looks like the country names are hard to read - there are too many of 
     - We'll create a new dataframe from our original dataframe, sdr_data, called lac_sdr_data that only includes countries in Latin America and the Carribean
 
 ```{r}
-lac_sdr_data <- sdr_data %>% 
-  filter(regions_used_for_the_sdr == "LAC") # filtering for LAC countries only
+MENA_sdr_data <- sdr_data %>% 
+  filter(regions_used_for_the_sdr == "MENA") # filtering for MENA countries only
+```
+
+
+```{r}
+OECD_sdr_data <- sdr_data %>% 
+  filter(regions_used_for_the_sdr == "OECD") # filtering for OECD countries only
 ```
 
 Now let's make a bar chart from our new dataframe `lac_sdr_data`
 
 ```{r}
-ggplot(lac_sdr_data, aes(x= goal_3_score, y = country)) +
+ggplot(MENA_sdr_data, aes(x= goal_3_score, y = country)) +
   geom_bar(stat = "identity") 
 ```
+```{r}
+ggplot(OECD_sdr_data, aes(x= goal_14_score, y = country)) +
+  geom_histogram(stat = "identity") 
+```
+
 
 #### Faceted Bar Chart
 
@@ -215,9 +238,15 @@ Each bar/bin represents a range of SDG 4 Scores. There are 30 bars/bins so each 
 This is great for looking at the distribution of Goal 4 scores, but let's explore further with adding another layer of visualization.
 
 ```{r}
-ggplot(sdr_data, aes(x = goal_4_score, fill=regions_used_for_the_sdr)) + 
+ggplot(sdr_data, aes(x = goal_14_score, fill=regions_used_for_the_sdr)) + 
   geom_histogram(bins=33, color="black")
 ```
+```{r}
+ggplot(sdr_data, aes(x = goal_17_score, fill=regions_used_for_the_sdr)) + 
+  geom_histogram(bins=33, color="black")
+```
+Interpretation: The Only Region With A Consistent Pattern Is The SUb-Saharan Africa more in the lower end the rest of the Regions dont have a consistent pattern and are found all over the chart.- DATAMakalii
+
 
 Interpretation:
 Countries that fall in the higher end of the Goal 4 spectrum belong to the OECD region, while countries in Sub-Saharan Africa lie towards the lower end. 
