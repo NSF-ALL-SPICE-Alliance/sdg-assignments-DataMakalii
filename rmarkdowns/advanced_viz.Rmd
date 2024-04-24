@@ -22,6 +22,7 @@ output:
 Loading in our Libraries
 
 
+
 ```{r setup, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
@@ -45,12 +46,20 @@ Read in 2023 Sustainable Development Data with *read_csv()* and *here()*
 ```{r, message=FALSE}
 sdr_data <- read_csv(here("data/SDR-2023-Data.csv"))
 ```
+```{r}
+advanced_Viz_Data <- read_csv(here("data/SDR-2023-Data.csv"))
+```
 
 Clean column names
 
 ```{r}
 sdr_data <- sdr_data %>% 
   clean_names()
+```
+```{r}
+advanced_Viz_Data <- sdr_data %>% 
+  clean_names()
+
 ```
 
 
@@ -62,8 +71,6 @@ Let's start with the histogram you created last lesson with ggplot() and geom_hi
 ggplot(sdr_data, aes(x = goal_4_score, fill=regions_used_for_the_sdr)) +
   geom_histogram()
 ```
-
-
 Looks Nice, but let's improve it!
   
   - add a theme with theme_minimal()
@@ -73,17 +80,27 @@ Looks Nice, but let's improve it!
 We start with the same exact code and add to it with `+`  
   
 ```{r, message=FALSE, warning=FALSE}
-ggplot(sdr_data, aes(x = goal_4_score, fill=regions_used_for_the_sdr)) +
+ggplot(sdr_data, aes(x = goal_4_score, y= goal_2_score, color=regions_used_for_the_sdr)) +
   geom_histogram() +
   theme_minimal() +
   scale_fill_viridis_d() +
   labs(title = "Distributions of SDG 4 Scores",
        x = "SDG 4 Score",
-       y = "Number of Countries",
-       fill = "Region")
+       y = "SDG 2 Score",
+       color = "Region")
   
 ```
 
+```{r}
+ggplot(sdr_data, aes(x = goal_4_score, fill=regions_used_for_the_sdr)) +
+  geom_histogram() +
+  theme_grey() +
+  scale_fill_viridis_d(option = "magma") +
+labs(title= "Other SDG 4 Scores",
+     x= "SDG 4 Score",
+     y= "Number Of Different countries",
+     fill = "region")
+```
 
 
 Awesome, looking much better!
@@ -117,6 +134,18 @@ goal_4_histogram <- ggplot(sdr_data, aes(x = goal_4_score, fill=regions_used_for
 ggplotly(goal_4_histogram)
 ```
 
+```{r}
+goal_4_point <- ggplot(sdr_data, aes(x = goal_4_score, y= goal_2_score,  color=regions_used_for_the_sdr)) +
+  geom_point() +
+  theme_minimal () +
+  scale_fill_viridis_d(option="magma") +
+  labs(title = "Goal Differences ",
+  x = "Score 4 goal !",
+  y = "Goal 2 Scores",
+  Color = "region")
+  
+  ggplotly(goal_4_point)
+```
 
 
 Epic! Now we can hover over the histogram and get some info
@@ -146,6 +175,18 @@ ggplot(data = sdr_data, aes(x= goal_3_score, y = goal_4_score, color = regions_u
 
   - hint: you will have to assign a name to the plot
 
+```{r}
+goal_3_4_scatter_plot <- ggplot(data = sdr_data, aes(x= goal_3_score, y = goal_4_score, color = regions_used_for_the_sdr, Label=country)) +
+  geom_point()+
+  theme_minimal()+
+  scale_fill_viridis_d(option="inferno")+
+  labs(title= "Compare/Contrast Goals",
+  x= "Goal 3 Score",
+  y= "goal 4 Score",
+  Color ="regions")
+  
+  ggplotly(goal_3_4_scatter_plot)
+```
 
 
 ### Creating interactive maps with `leaflet`
