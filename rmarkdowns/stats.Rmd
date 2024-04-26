@@ -65,6 +65,14 @@ ggplot(sdr_data, aes(x = goal_7_score,
   theme_minimal() 
 ```
 
+```{r}
+ggplot(sdr_data, aes(x= goal_7_score,
+                     y= goal_1_score)) +
+         geom_point() +
+         theme_minimal()
+       
+```
+
 It seems that there is a general trend that countries with higher goal 7 scores also have higher goal 1 scores and vice versa
   
 - Note: There are outliers regarding this trend 
@@ -83,6 +91,15 @@ ggplot(sdr_data, aes(x = goal_7_score,
   geom_smooth() +
   theme_minimal() 
 ```
+
+```{r}
+ggplot(sdr_data, aes(x = goal_7_score,
+                     y = goal_1_score)) +
+  geom_point()+
+  geom_smooth()+
+  theme_minimal()
+```
+
 
 Interesting, our line does go up and to the right, indicating a *positive correlation*
 
@@ -110,6 +127,14 @@ ggplot(sdr_data, aes(x = goal_7_score,
   geom_smooth() +
   stat_cor() +
   theme_minimal() 
+```
+```{r}
+ggplot(sdr_data, aes(x = goal_7_score,
+                     y = goal_1_score)) +
+  geom_point() +
+  geom_smooth() +
+  stat_cor()+
+  theme_minimal()
 ```
 
 Awesome! Now we have a correlation coefficent (R = 0.79) What does this mean?
@@ -145,6 +170,15 @@ sdr_scores <- sdr_data %>%
     goal_16_score, goal_17_score
   )
 ```
+```{r}
+sdr_scores <- sdr_data %>% 
+  select(
+    goal_1_score, goal_2_score, goal_3_score, goal_4_score, goal_5_score,
+    goal_6_score, goal_7_score, goal_8_score, goal_9_score, goal_10_score, 
+    goal_11_score, goal_12_score, goal_13_score, goal_14_score, goal_15_score,
+    goal_16_score, goal_17_score
+  )
+```
 
 
 Now, let's create a matrix from the sdr_scores dataframe with the as.matrix() function
@@ -168,6 +202,15 @@ ggcorrplot(cor, method = "circle", type = "lower", lab = TRUE, lab_size = 2) +
   theme(axis.text.y = element_text(size = 8),
   axis.text.x = element_text(size = 8))
 ```
+
+```{r}
+ggcorrplot(cor, method = "circle", type = "lower" , lab = TRUE, lab_size = 2) + 
+  theme(axis.text.y = element_text(size = 8),
+axis.text.x = element_text(size = 8)                                                                                       
+                                                                                       
+                                                                                      
+```
+
 
 Interesting! 
 
@@ -224,3 +267,19 @@ ggplot(sdr_data, aes(x = goal_12_score,
       - are there any points that don't follow the trend (outliers)
         
         - which country(s) are outliers?
+        
+        
+```{r}
+project_plot<- ggplot(sdr_data, aes(x = goal_6_score, 
+                     y = goal_15_score,
+                     label = country,
+                     color= "magma")) +
+  
+  geom_point() +
+  geom_smooth() +
+  stat_cor() +
+  theme_minimal()
+ggplotly(project_plot)
+```
+        
+  there is a positive correlation with these 2 SDG scores, it is a slight correlation, Most of the countries have SDG scores that are very similiar two each other. There is only a few with low scores in one area but high scores in the other. The Slope Rises in the begining and drops a tad bit, then rises back up on a gradual slope. Country Lativa,United Kingdom, Denmark, Finland, Sweeden ETC. is doing well in both SDG Scores.     
