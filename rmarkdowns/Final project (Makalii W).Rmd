@@ -1,0 +1,123 @@
+---
+title: "Less Poverty, Less Hunger."
+author: "Makalii West"
+date: "2024-05-01" 
+output: html_document
+---
+
+Load in Packages used in the analysis
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor) 
+library(leaflet)
+library(plotly)
+library(rnaturalearth)
+library(sp)
+library(ggpubr)
+library(ggcorrplot)
+library(vembedr)
+```
+
+Read In Data
+
+```{r}
+sdr_data <- read_csv(here("data/SDR-2023-Data.csv"))
+```
+
+```{r}
+sdr_data_sids <- read_csv(here("data/SDR-for-SIDS/SIDS-SDR-2023-data.csv"))
+```
+
+
+Clean Column Names For Data
+
+```{r}
+sdr_data <- sdr_data %>% 
+  clean_names
+```
+
+```{r}
+sdr_data_sids <- sdr_data_sids %>% 
+  clean_names()
+```
+Make A Histogram FOr SDG Score 2 Undernourishment
+
+```{r}
+Goal_2_Histogram <- ggplot(data = sdr_data, aes (x= prevalence_of_undernourishment_percent,
+ fill=regions_used_for_the_sdr))+
+  geom_histogram() +
+  theme_minimal()+
+labs(title= " SDG Score 2",
+     x= "Prevalence of undernoursihment(%)",
+     y= "Number Of Different countries",
+     fill = "region")
+     
+ggplotly(Goal_2_Histogram)
+```
+sdg2_undernsh is the Prevalence of undernourishment percentage.
+The variable that we are looking at here is SDG Score 2, More specifically the undernourishment score of this SDG.
+I Chose to visualize the data in this way to show the amount of countries in each region that are undernourished.You will notice in this interactive graph that there are 7 countries where 40% of the population is undernourished. You also see that the regions who have 40% of the population undernourished are the Sub-Saharan Africa, LAC, MENA And East & South Asia Countries. For the most part most places in the world dont have to  many people who are undernourished in todays world. 
+There A 33 Countries in the OECD region with a very low score. What i Have gathered from this is the undernourishment around the world is starting to decline for the most part.
+```{r}
+Goal_1_Histogram <- ggplot(data = sdr_data, aes (x= poverty_headcount_ratio_at_3_65_day_2017_ppp_percent,
+ fill=regions_used_for_the_sdr))+
+  geom_histogram() +
+  theme_minimal()+
+labs(title= " SDG Score 1",
+     x= "Poverty head count ratio at $3.65/day ",
+     y= "Number Of Different countries",
+     fill = "region")
+     
+ggplotly(Goal_1_Histogram)
+```
+This graph is on the percentage of the poverty head count ratio at $3.65 per day. The reason why i wanted to use this visualization is because it goes hand in hand with the last one.When you take a first look at this graph you will notice that the Sub-Saharan Africa Region has the highest percentage of poverty. Another thing to take notice of is which regions have a 50% or more poverty percentage, Which is Sub-Saharan Africa, MENA, Oceania, LAC, E. Europe & C.Asia. Something to take note of is that the OECD region has the most countries with the lowest poverty percentage. Now That We Have these two graphs there is something  we can relate to each other, which is how the Sub-Saharan Africa Region a struggle with both of these Goals. You May Also Notice that world poverty has actually declined. The Regions that did well in this goal also did well in the goal of undernourishment and trying to stop the ammount of people who are malnourished.
+
+Pulling Data From Another Data Set(Same One From Stats)
+
+```{r}
+sdr_data <- read_csv(here("data/SDR-2023-Data.csv"))
+```
+```{r}
+sdr_data <- sdr_data %>% 
+  clean_names()
+```
+
+
+```{r}
+sdg_goals <- ggplot(sdr_data, aes(x =goal_1_score,
+                     y = goal_2_score,
+                     label = country,
+                     color = "Thunder")) +
+  labs(title= " Scores",
+     x= "No Poverty",
+     y= "Zero Hunger")+ 
+  geom_point() +
+  geom_smooth() +
+  stat_cor(output.type = "text", label.sep = '\n') +
+  theme_minimal()
+ggplotly(sdg_goals)
+```
+So what I did here was pull some data from the data set that we used in stats. The reason why i did this was to be able to show a comparison between the goal 1 score (No Poverty) and goal 2 score (Zero Hunger).As you can see when you first take a glance at the scatter plot you see that majority of the countries are closer to the 100 score than to the score of 0. There Are A Few Outliers in the plot as you can see there are about 4 obvious outliers which are the points below the score of 25 on the X-Axis and below the score of 40 on the Y-Axis.Now the reason why i feel like this is important is to show that for the countries who have high scores for No Poverty they also have high scores for Zero Hunger as well. There are also a few outliers of countries who are reaching a good score for No Poverty but still have low numbers for Zero Hunger, Lower Meaning Below 50 on the score. Overall though you see a slight positive correlation between the two. The correlation between the two is 0.55 as displayed above in the scatter plot. If the number next to "R = " were a negative number you would also see on the plot that the correlation would be negative and would see the slope going towards the bottom of the plot.
+
+```{r}
+SS_Africa_sdr_data <- sdr_data %>% 
+  filter(regions_used_for_the_sdr == "Sub-Saharan Africa")
+```
+
+
+```{r}
+S_Africa <- ggplot(SS_Africa_sdr_data, aes(x =goal_2_score,
+                     y = goal_1_score, label = country)) +
+  labs(title= "Scores",
+     x= "Zero Hunger",
+     y= "No Poverty")+ 
+  geom_point() +
+  geom_smooth() +
+  stat_cor(output.type ="text", label.sep = '\n') +
+  theme_minimal()
+ggplotly(S_Africa)
+```
+So In This Plot I Compared The Sdg Score 1(No Poverty) and Sdg Score 2(Zero Hunger), But Using Only The Sub-Saharan Africa Region.You can see that there are actually a decent amount of countries in this region who have a pretty decent score. There are only a few countries in this region with a low score. Some countries with a low score in this plot are South Sudan, Somalia, Central African Republic. Majority of the countries in this regions have a good SDG score 2 Even without any Sdg scores at all from No poverty. The Reason why I Chose to create this plot was because in the plots created before this, this specific region stood out the most with its data, as far as it being low. To make this plot I had to pull data from the SDR and filter out the specific region so that i could run the code chunk to target just this region.You also see that about half or more of the countries that are doing well in  one area are also doing well in the other.

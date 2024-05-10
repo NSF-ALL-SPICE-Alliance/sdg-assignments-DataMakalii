@@ -336,11 +336,11 @@ Edit this code chunk `k2 <- kmeans(sdr_data_imputed, centers = 2)` under the sil
 - Then, run the code chunk `fviz_cluster(k2, data = sdr_data_imputed) + theme_minimal()` to see the new visualization with the increased number of clusters
   
 ```{r}
-k4 <- kmeans(sdr_data_imputed, centers = 4)
+k6 <- kmeans(sdr_data_imputed, centers = 6)
 ```
 
 ```{r}
-fviz_cluster(k4, data = sdr_data_imputed) + theme_minimal()
+fviz_cluster(k6, data = sdr_data_imputed) + theme_minimal()
 ```
 
   
